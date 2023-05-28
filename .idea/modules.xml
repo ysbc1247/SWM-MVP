@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/SWM-MVP.iml" filepath="$PROJECT_DIR$/.idea/SWM-MVP.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mvp.iml" filepath="$PROJECT_DIR$/.idea/modules/mvp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mvp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mvp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mvp.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mvp.test.iml" />
+>>>>>>> youtube
     </modules>
   </component>
 </project>
