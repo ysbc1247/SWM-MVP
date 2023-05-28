@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff37bae7-752d-446a-b778-fbe08f0b0e82" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/mvp/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/mvp/build.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="ff37bae7-752d-446a-b778-fbe08f0b0e82" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +56,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/ysbc1/github/SWM-MVP"
+    "last_opened_file_path": "C:/Users/ysbc1/github/SWM-MVP",
+    "nodejs_package_manager_path": "npm"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -69,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685267923648</updated>
-      <workItem from="1685267926035" duration="754000" />
+      <workItem from="1685267926035" duration="1525000" />
     </task>
     <servers />
   </component>
