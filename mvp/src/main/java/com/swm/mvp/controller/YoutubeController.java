@@ -1,6 +1,6 @@
 package com.swm.mvp.controller;
 
-import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
 import com.swm.mvp.service.CustomUserDetails;
 import com.swm.mvp.service.TranscriptService;
@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.util.List;
@@ -36,13 +34,13 @@ public class YoutubeController {
     }
     @PostMapping("/save/{youtubeId}")
     public ResponseEntity<Youtube> saveYoutubeVideo(@PathVariable String youtubeId, Principal principal) {
-        Optional<User> userOptional = userService.getUserByUserName(principal.getName());
+        Optional<Users> userOptional = userService.getUserByUserName(principal.getName());
 
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
+            Users users = userOptional.get();
             Youtube youtube = transcriptService.fetchTranscripts(youtubeId, principal.getName()).block();
-            user.getYoutubeList().add(youtube);
-            userService.saveUser(user);
+            users.getYoutubeList().add(youtube);
+            userService.saveUser(users);
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -50,7 +48,7 @@ public class YoutubeController {
     }
 
     @GetMapping
-    public Flux<Youtube> getAllYoutubesByUser(Principal principal) {
+    public List<Youtube> getAllYoutubesByUser(Principal principal) {
         Long userId = ((CustomUserDetails) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId();
         return youtubeService.getAllYoutubes(userId);
     }
@@ -60,7 +58,7 @@ public class YoutubeController {
         youtubeService.deleteYoutube(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Youtube> getAllYoutubes() {
         return youtubeService.findAllYoutubes();
     }

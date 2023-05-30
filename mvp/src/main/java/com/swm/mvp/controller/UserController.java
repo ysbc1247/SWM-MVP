@@ -1,7 +1,7 @@
 package com.swm.mvp.controller;
 
 import com.swm.mvp.dto.UserDTO;
-import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Users;
 import com.swm.mvp.repository.UserRepository;
 import com.swm.mvp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +24,15 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody UserDTO user) {
+    public ResponseEntity<Users> signUp(@RequestBody UserDTO user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body(null);
         }
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));  // encode the password
+        Users newUsers = new Users();
+        newUsers.setUsername(user.getUsername());
+        newUsers.setPassword(passwordEncoder.encode(user.getPassword()));  // encode the password
 
-        return ResponseEntity.ok(userService.save(newUser));
+        return ResponseEntity.ok(userService.save(newUsers));
     }
 }

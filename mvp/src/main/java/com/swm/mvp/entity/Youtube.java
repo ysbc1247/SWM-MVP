@@ -22,6 +22,6 @@ public class Youtube {
     private List<Transcript> transcriptList;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users users;
 }

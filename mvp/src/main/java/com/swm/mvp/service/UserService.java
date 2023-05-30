@@ -1,6 +1,6 @@
 package com.swm.mvp.service;
 
-import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Users;
 import com.swm.mvp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,19 +17,19 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User save(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public Users save(Users users){
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
+        return userRepository.save(users);
     }
-    public Optional<User> getUserByUserId(Long id) {
+    public Optional<Users> getUserByUserId(Long id) {
         return userRepository.findById(id);
     }
 
-    public Optional<User> getUserByUserName(String username) {
+    public Optional<Users> getUserByUserName(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public void saveUser(User user) {
+    public void saveUser(Users users) {
     }
 }
 

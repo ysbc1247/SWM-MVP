@@ -4,6 +4,8 @@ import com.swm.mvp.entity.Youtube;
 import org.springframework.data.jpa.repository.JpaRepository;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 public interface YoutubeRepository extends JpaRepository<Youtube, Long> {
-    Flux<Youtube> findAllByUserId(Long userId);
+    List<Youtube> findAllByUsersId(Long userId);
 }
