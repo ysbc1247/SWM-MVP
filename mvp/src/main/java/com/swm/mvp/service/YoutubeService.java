@@ -1,7 +1,12 @@
 package com.swm.mvp.service;
 
+import com.swm.mvp.entity.User;
 import com.swm.mvp.entity.Youtube;
+import com.swm.mvp.repository.UserRepository;
 import com.swm.mvp.repository.YoutubeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -12,14 +17,28 @@ import java.util.Optional;
 
 @Service
 public class YoutubeService {
-    private final YoutubeRepository youtubeRepository;
+    @Autowired
+    private YoutubeRepository youtubeRepository;
 
-    public YoutubeService(YoutubeRepository youtubeRepository) {
-        this.youtubeRepository = youtubeRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
-    public Youtube saveYoutube(Youtube youtube) {
-        return youtubeRepository.save(youtube);
+    @Autowired
+    private UserService userService;
+
+    public ResponseEntity<Youtube> saveYoutube(Long userId, Youtube newYoutube) {
+        Optional<User> userOptional = userService.getUserByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Youtube youtube = new Youtube();
+            youtube.setLink(newYoutube.getLink());
+            youtube.setTranscriptList(newYoutube.getTranscriptList());
+            user.getYoutubeList().add(youtube);
+            userService.saveUser(user);  // Make sure you have a method to save the updated user in your UserService
+            return new ResponseEntity<>(youtube, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     public Optional<Youtube> findYoutubeById(Long id) {
