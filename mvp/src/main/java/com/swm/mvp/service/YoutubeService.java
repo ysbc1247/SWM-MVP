@@ -34,7 +34,7 @@ public class YoutubeService {
             youtube.setLink(newYoutube.getLink());
             youtube.setTranscriptList(newYoutube.getTranscriptList());
             user.getYoutubeList().add(youtube);
-            userService.saveUser(user);  
+            userService.saveUser(user);
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
