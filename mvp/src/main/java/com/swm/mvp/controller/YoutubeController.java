@@ -40,7 +40,7 @@ public class YoutubeController {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            Youtube youtube = transcriptService.fetchTranscripts(youtubeId).block();
+            Youtube youtube = transcriptService.fetchTranscripts(youtubeId, principal.getName()).block();
             user.getYoutubeList().add(youtube);
             userService.saveUser(user);
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
