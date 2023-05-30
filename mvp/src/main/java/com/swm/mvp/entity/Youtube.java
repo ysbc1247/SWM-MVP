@@ -20,4 +20,8 @@ public class Youtube {
 
     @ElementCollection
     private List<Transcript> transcriptList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
