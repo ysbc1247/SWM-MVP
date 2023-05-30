@@ -26,15 +26,15 @@ public class YoutubeService {
     @Autowired
     private UserService userService;
 
-    public ResponseEntity<Youtube> saveYoutube(Long userId, Youtube newYoutube) {
-        Optional<User> userOptional = userService.getUserByUserId(userId);
+    public ResponseEntity<Youtube> saveYoutube(String username, Youtube newYoutube) {
+        Optional<User> userOptional = userService.getUserByUserName(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             Youtube youtube = new Youtube();
             youtube.setLink(newYoutube.getLink());
             youtube.setTranscriptList(newYoutube.getTranscriptList());
             user.getYoutubeList().add(youtube);
-            userService.saveUser(user);  // Make sure you have a method to save the updated user in your UserService
+            userService.saveUser(user);
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,6 +45,9 @@ public class YoutubeService {
         return youtubeRepository.findById(id);
     }
 
+    public Flux<Youtube> getAllYoutubes(Long userId) {
+        return youtubeRepository.findAllByUserId(userId);
+    }
 
     public void deleteYoutube(Long id) {
         youtubeRepository.deleteById(id);
