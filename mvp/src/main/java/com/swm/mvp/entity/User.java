@@ -10,18 +10,18 @@ import java.util.List;
 @Table
 @Getter
 @Setter
-
-public class Youtube {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String link;
+    private String username;
 
-    @ElementCollection
-    private List<Transcript> transcriptList;
+    private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String email;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Youtube> youtubeList;
+
 }
