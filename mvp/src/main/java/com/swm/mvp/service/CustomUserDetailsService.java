@@ -1,6 +1,6 @@
 package com.swm.mvp.service;
 
-import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Users;
 import com.swm.mvp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +16,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        Users users = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + username));
-        return new CustomUserDetails(user);
+        return new CustomUserDetails(users);
     }
 }

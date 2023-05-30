@@ -1,7 +1,7 @@
 package com.swm.mvp.service;
 
 import com.swm.mvp.entity.Transcript;
-import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
 import com.swm.mvp.repository.UserRepository;
 import com.swm.mvp.repository.YoutubeRepository;
@@ -28,11 +28,11 @@ public class TranscriptService {
     }
 
     public Mono<Youtube> fetchTranscripts(String videoId, String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<Users> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return Mono.error(new RuntimeException("User not found"));
         }
-        User user = userOptional.get();
+        Users users = userOptional.get();
         return webClient.get()
                 .uri("/transcripts/" + videoId)
                 .retrieve()
@@ -52,7 +52,7 @@ public class TranscriptService {
                         transcriptList.add(transcript);
                     }
                     youtube.setTranscriptList(transcriptList);
-                    youtube.setUser(user);
+                    youtube.setUsers(users);
                     return youtube;
                 })
                 .flatMap(youtube -> Mono.fromCallable(() -> youtubeRepository.save(youtube)));
