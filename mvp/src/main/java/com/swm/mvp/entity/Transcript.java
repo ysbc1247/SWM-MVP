@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Transcript {
-    private String sentence;
-    private Double startTime;
-    private Double endTime;
+    private String text;
+    private Double start;
+    private Double duration;
 }
