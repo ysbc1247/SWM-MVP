@@ -1,9 +1,9 @@
 package com.swm.mvp.controller;
 
-import com.swm.mvp.dto.UserDTO;
+import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.Users;
-import com.swm.mvp.repository.UserRepository;
-import com.swm.mvp.service.UserService;
+import com.swm.mvp.repository.UsersRepository;
+import com.swm.mvp.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,26 +16,33 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UsersService userService;
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
     public List<Users> getAllUsers(){
-        return userService.getAllUsers();
+        return usersRepository.findAll();
     }
     @PostMapping("/signup")
-    public ResponseEntity<Users> signUp(@RequestBody UserDTO user) {
+    public ResponseEntity<UsersDTO> signUp(@RequestBody UsersDTO user) {
 
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (usersRepository.findByUserId(user.toEntity().getUserId()).isPresent()) {
             return ResponseEntity.badRequest().body(null);
         }
         Users newUsers = new Users();
-        newUsers.setUsername(user.getUsername());
-        newUsers.setPassword(passwordEncoder.encode(user.getPassword()));  // encode the password
+        newUsers.setUserId(user.toEntity().getUserId());
+        newUsers.setUserPassword(passwordEncoder.encode(user.toEntity().getUserPassword()));  // encode the password
 
-        return ResponseEntity.ok(userService.save(newUsers));
+        return ResponseEntity.ok(userService.saveUser( user.userId(),
+                user.userPassword(),
+                user.roleTypes(),
+                user.email(),
+                user.nickname(),
+                user.memo(),
+                user.youtubeList()
+        ));
     }
 }
