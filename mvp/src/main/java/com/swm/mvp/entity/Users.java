@@ -21,7 +21,7 @@ public class Users {
 
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
     private List<Youtube> youtubeList;
 
 }
