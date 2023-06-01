@@ -35,6 +35,7 @@ public class YoutubeController {
     @PostMapping("/save/{youtubeId}")
     public ResponseEntity<Youtube> saveYoutubeVideo(@PathVariable String youtubeId, Principal principal) {
         Optional<Users> userOptional = userService.getUserByUserName(principal.getName());
+        System.out.println(principal.getName());
 
         if (userOptional.isPresent()) {
             Users users = userOptional.get();
