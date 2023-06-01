@@ -1,35 +1,35 @@
 server:
-port: 8080
+  port: 8080
 
 debug: true
 management.endpoints.web.exposure.include: "*"
 
 logging:
-level:
-com.keyworld.projectboard: debug
-org.springframework.web.servlet: debug
-org.hibernate.type.descriptor.sql.BasicBinder: trace
+  level:
+    com.swm.mvp: debug
+    org.springframework.web.servlet: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 spring:
-servlet:
-multipart:
-max-file-size: 10MB
-datasource:
-url: jdbc:mysql://localhost:3306/board?createDatabaseIfNotExist=True&useUnicode=true&characterEncoding=utf8
-username: ystc1247
-password: kj10501050
-jpa:
-open-in-view: false
-defer-datasource-initialization: true
-hibernate.ddl-auto: create
-show-sql: true
-properties:
-hibernate.format_sql: true
-hibernate.default_batch_fetch_size: 100
-sql.init.mode: always
-data.rest:
-base-path: /api
-detection-strategy: annotated
-sql:
-init:
-encoding: utf-8
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/board?createDatabaseIfNotExist=True&useUnicode=true&characterEncoding=utf8
+    username: ystc1247
+    password: kj10501050
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+  sql.init.mode: always
+  data.rest:
+    base-path: /api
+    detection-strategy: annotated
+  sql:
+    init:
+      encoding: utf-8
