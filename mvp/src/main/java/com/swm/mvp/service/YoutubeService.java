@@ -1,8 +1,8 @@
 package com.swm.mvp.service;
 
-import com.swm.mvp.entity.Users;
+import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.Youtube;
-import com.swm.mvp.repository.UserRepository;
+import com.swm.mvp.repository.UsersRepository;
 import com.swm.mvp.repository.YoutubeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,32 +18,41 @@ public class YoutubeService {
     private YoutubeRepository youtubeRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
-    private UserService userService;
+    private UsersService userService;
 
     public ResponseEntity<Youtube> saveYoutube(String username, Youtube newYoutube) {
-        Optional<Users> userOptional = userService.getUserByUserName(username);
+        Optional<UsersDTO> userOptional = userService.searchUser(username);
         if (userOptional.isPresent()) {
-            Users users = userOptional.get();
+            UsersDTO users = userOptional.get();
             Youtube youtube = new Youtube();
             youtube.setLink(newYoutube.getLink());
             youtube.setTranscriptList(newYoutube.getTranscriptList());
             users.getYoutubeList().add(youtube);
-            userService.saveUser(users);
+            userService.saveUser(
+                    users.userId(),
+                    users.userPassword(),
+                    users.roleTypes(),
+                    users.email(),
+                    users.nickname(),
+                    users.memo(),
+                    users.youtubeList()
+            );
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+
     public Optional<Youtube> findYoutubeById(Long id) {
         return youtubeRepository.findById(id);
     }
 
-    public List<Youtube> getAllYoutubes(Long userId) {
-        return youtubeRepository.findAllByUsersId(userId);
+    public List<Youtube> getAllYoutubes(String userId) {
+        return youtubeRepository.findAllByUsers_UserId(userId);
     }
 
     public void deleteYoutube(Long id) {

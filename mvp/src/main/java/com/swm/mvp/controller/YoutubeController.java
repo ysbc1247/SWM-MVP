@@ -1,10 +1,10 @@
 package com.swm.mvp.controller;
 
+import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
-import com.swm.mvp.service.CustomUserDetails;
 import com.swm.mvp.service.TranscriptService;
-import com.swm.mvp.service.UserService;
+import com.swm.mvp.service.UsersService;
 import com.swm.mvp.service.YoutubeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class YoutubeController {
     private final TranscriptService transcriptService;
     private final YoutubeService youtubeService;
 
-    private final UserService userService;
+    private final UsersService userService;
 
-    public YoutubeController(TranscriptService transcriptService, YoutubeService youtubeService, UserService userService) {
+    public YoutubeController(TranscriptService transcriptService, YoutubeService youtubeService, UsersService userService) {
         this.transcriptService = transcriptService;
         this.youtubeService = youtubeService;
         this.userService = userService;
@@ -34,14 +34,22 @@ public class YoutubeController {
     }
     @PostMapping("/save/{youtubeId}")
     public ResponseEntity<Youtube> saveYoutubeVideo(@PathVariable String youtubeId, Principal principal) {
-        Optional<Users> userOptional = userService.getUserByUserName(principal.getName());
+        Optional<UsersDTO> userOptional = userService.searchUser(principal.getName());
         System.out.println(principal.getName());
 
         if (userOptional.isPresent()) {
-            Users users = userOptional.get();
+            UsersDTO users = userOptional.get();
             Youtube youtube = transcriptService.fetchTranscripts(youtubeId, principal.getName()).block();
             users.getYoutubeList().add(youtube);
-            userService.saveUser(users);
+            userService.saveUser(
+                    users.userId(),
+                    users.userPassword(),
+                    users.roleTypes(),
+                    users.email(),
+                    users.nickname(),
+                    users.memo(),
+                    users.youtubeList()
+            );
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -49,9 +57,8 @@ public class YoutubeController {
     }
 
     @GetMapping
-    public List<Youtube> getAllYoutubesByUser(Principal principal) {
-        Long userId = ((CustomUserDetails) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getId();
-        return youtubeService.getAllYoutubes(userId);
+    public List<Youtube> getAllYoutubesByUser(@PathVariable String id) {
+        return youtubeService.getAllYoutubes(id);
     }
 
     @DeleteMapping("/{id}")

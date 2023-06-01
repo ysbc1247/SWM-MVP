@@ -3,7 +3,7 @@ package com.swm.mvp.service;
 import com.swm.mvp.entity.Transcript;
 import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
-import com.swm.mvp.repository.UserRepository;
+import com.swm.mvp.repository.UsersRepository;
 import com.swm.mvp.repository.YoutubeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,16 +19,16 @@ public class TranscriptService {
     private final WebClient webClient;
     private final YoutubeRepository youtubeRepository;
 
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
-    public TranscriptService(WebClient.Builder webClientBuilder, YoutubeRepository youtubeRepository, UserRepository userRepository) {
+    public TranscriptService(WebClient.Builder webClientBuilder, YoutubeRepository youtubeRepository, UsersRepository usersRepository) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:5000").build();
         this.youtubeRepository = youtubeRepository;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
     }
 
     public Mono<Youtube> fetchTranscripts(String videoId, String username) {
-        Optional<Users> userOptional = userRepository.findByUsername(username);
+        Optional<Users> userOptional = usersRepository.findById(username);
         if (userOptional.isEmpty()) {
             return Mono.error(new RuntimeException("User not found"));
         }
