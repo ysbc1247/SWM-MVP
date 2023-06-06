@@ -4,10 +4,12 @@ import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.Youtube;
 import com.swm.mvp.repository.UsersRepository;
 import com.swm.mvp.repository.YoutubeRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,17 +42,21 @@ public class YoutubeService {
                     users.memo(),
                     users.youtubeList()
             );
+            youtubeRepository.save(youtube);
             return new ResponseEntity<>(youtube, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-
+    @Transactional
     public Optional<Youtube> findYoutubeById(Long id) {
-        return youtubeRepository.findById(id);
+        Optional<Youtube> youtube = youtubeRepository.findById(id);
+        Hibernate.initialize(youtube.get().getTranscriptList());
+        return youtube;
     }
 
+    @Transactional
     public List<Youtube> getAllYoutubes(String userId) {
         return youtubeRepository.findAllByUsers_UserId(userId);
     }

@@ -21,7 +21,7 @@ public class Youtube {
     @ElementCollection
     private List<Transcript> transcriptList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "users_id", nullable = false)
     private Users users;
 }

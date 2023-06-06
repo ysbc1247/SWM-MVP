@@ -3,6 +3,7 @@ package com.swm.mvp.controller;
 import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
+import com.swm.mvp.repository.YoutubeRepository;
 import com.swm.mvp.service.TranscriptService;
 import com.swm.mvp.service.UsersService;
 import com.swm.mvp.service.YoutubeService;
@@ -19,13 +20,15 @@ import java.util.Optional;
 public class YoutubeController {
     private final TranscriptService transcriptService;
     private final YoutubeService youtubeService;
-
     private final UsersService userService;
+    private final YoutubeRepository youtubeRepository;
 
-    public YoutubeController(TranscriptService transcriptService, YoutubeService youtubeService, UsersService userService) {
+    public YoutubeController(TranscriptService transcriptService, YoutubeService youtubeService, UsersService userService,
+                             YoutubeRepository youtubeRepository) {
         this.transcriptService = transcriptService;
         this.youtubeService = youtubeService;
         this.userService = userService;
+        this.youtubeRepository = youtubeRepository;
     }
 
     @GetMapping("/{id}")
@@ -56,7 +59,7 @@ public class YoutubeController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/user/id")
     public List<Youtube> getAllYoutubesByUser(@PathVariable String id) {
         return youtubeService.getAllYoutubes(id);
     }
