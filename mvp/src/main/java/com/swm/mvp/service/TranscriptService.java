@@ -6,13 +6,11 @@ import com.swm.mvp.entity.Youtube;
 import com.swm.mvp.repository.UsersRepository;
 import com.swm.mvp.repository.YoutubeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TranscriptService {
@@ -20,9 +18,14 @@ public class TranscriptService {
     private final YoutubeRepository youtubeRepository;
 
     private final UsersRepository usersRepository;
-
+    ExchangeStrategies strategies = ExchangeStrategies.builder()
+            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
+            .build();
     public TranscriptService(WebClient.Builder webClientBuilder, YoutubeRepository youtubeRepository, UsersRepository usersRepository) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:5000").build();
+        this.webClient = WebClient.builder()
+                .exchangeStrategies(strategies)
+                .baseUrl("http://localhost:5000")  // Set your base URL accordingly
+                .build();
         this.youtubeRepository = youtubeRepository;
         this.usersRepository = usersRepository;
     }
@@ -48,7 +51,12 @@ public class TranscriptService {
                         transcript.setText((String) transcriptData.get("text"));
                         transcript.setStart((Double) transcriptData.get("start"));
                         transcript.setDuration((Double) transcriptData.get("duration"));
-
+                        String base64Audio = (String) transcriptData.get("audio");
+                        byte[] audioBytes = null;
+                        if (base64Audio != null) {
+                            audioBytes = Base64.getDecoder().decode(base64Audio);
+                        }
+                        transcript.setAudio(audioBytes);
                         transcriptList.add(transcript);
                     }
                     youtube.setTranscriptList(transcriptList);

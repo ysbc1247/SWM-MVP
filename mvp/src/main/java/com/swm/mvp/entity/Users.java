@@ -29,6 +29,7 @@ public class Users extends AuditingFields {
     @Setter @Column(length = 100) private String nickname;
     @Setter private String memo;
 
+
     @Setter @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
     private List<Youtube> youtubeList;
     public Users() {}
