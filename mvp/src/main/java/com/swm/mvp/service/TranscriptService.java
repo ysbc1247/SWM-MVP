@@ -59,6 +59,7 @@ public class TranscriptService {
                                     audioBytes = Base64.getDecoder().decode(base64Audio);
                                 }
                                 transcript.setAudio(audioBytes);
+                                transcript.setYoutube(youtube);  // Setting the reference to the Youtube object
                                 transcriptList.add(transcript);
                             }
                         }
