@@ -59,7 +59,7 @@ public class YoutubeController {
         }
     }
 
-    @GetMapping("/user/id")
+    @GetMapping("/user/{id}")
     public List<Youtube> getAllYoutubesByUser(@PathVariable String id) {
         return youtubeService.getAllYoutubes(id);
     }
