@@ -44,26 +44,31 @@ public class TranscriptService {
                 .map(transcriptDataList -> {
                     Youtube youtube = new Youtube();
                     youtube.setLink("https://www.youtube.com/watch?v=" + videoId);
-
                     List<Transcript> transcriptList = new ArrayList<>();
                     for (Map<String, Object> transcriptData : transcriptDataList) {
-                        Transcript transcript = new Transcript();
-                        transcript.setText((String) transcriptData.get("text"));
-                        transcript.setStart((Double) transcriptData.get("start"));
-                        transcript.setDuration((Double) transcriptData.get("duration"));
-                        String base64Audio = (String) transcriptData.get("audio");
-                        byte[] audioBytes = null;
-                        if (base64Audio != null) {
-                            audioBytes = Base64.getDecoder().decode(base64Audio);
+                        List<Map<String, Object>> transcripts = (List<Map<String, Object>>) transcriptData.get("transcripts");
+                        if (transcripts != null) {
+                            for (Map<String, Object> transcriptMap : transcripts) {
+                                Transcript transcript = new Transcript();
+                                transcript.setText((String) transcriptMap.get("text"));
+                                transcript.setStart(((Number) transcriptMap.get("start")).doubleValue());
+                                transcript.setDuration(((Number) transcriptMap.get("duration")).doubleValue());
+                                String base64Audio = (String) transcriptMap.get("audio");
+                                byte[] audioBytes = null;
+                                if (base64Audio != null) {
+                                    audioBytes = Base64.getDecoder().decode(base64Audio);
+                                }
+                                transcript.setAudio(audioBytes);
+                                transcriptList.add(transcript);
+                            }
                         }
-                        transcript.setAudio(audioBytes);
-                        transcriptList.add(transcript);
                     }
                     youtube.setTranscriptList(transcriptList);
                     youtube.setUsers(users);
                     return youtube;
                 })
                 .flatMap(youtube -> Mono.fromCallable(() -> youtubeRepository.save(youtube)));
+
     }
 
 }
