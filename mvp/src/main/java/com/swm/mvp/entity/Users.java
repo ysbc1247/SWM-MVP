@@ -1,5 +1,6 @@
 package com.swm.mvp.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swm.mvp.entity.converter.RoleTypesConverter;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +29,8 @@ public class Users extends AuditingFields {
     @Setter @Column(length = 100) private String email;
     @Setter @Column(length = 100) private String nickname;
     @Setter private String memo;
-
-
-    @Setter @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
+    @JsonManagedReference
     private List<Youtube> youtubeList;
     public Users() {}
 
