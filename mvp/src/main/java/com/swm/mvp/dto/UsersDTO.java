@@ -3,9 +3,6 @@ package com.swm.mvp.dto;
 import com.swm.mvp.entity.RoleType;
 import com.swm.mvp.entity.Users;
 import com.swm.mvp.entity.Youtube;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
