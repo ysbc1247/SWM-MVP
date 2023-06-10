@@ -25,7 +25,6 @@ spring:
     username: ystc1247
     password: kj10501050
   jpa:
-    open-in-view: false
     defer-datasource-initialization: true
     hibernate.ddl-auto: create
     show-sql: true
