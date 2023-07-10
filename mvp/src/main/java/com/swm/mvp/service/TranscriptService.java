@@ -1,9 +1,9 @@
 package com.swm.mvp.service;
 
 import com.swm.mvp.entity.Transcript;
-import com.swm.mvp.entity.Users;
-import com.swm.mvp.entity.Youtube;
-import com.swm.mvp.repository.UsersRepository;
+import com.swm.mvp.entity.User;
+import com.swm.mvp.entity.Video;
+import com.swm.mvp.repository.UserRepository;
 import com.swm.mvp.repository.YoutubeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -17,40 +17,40 @@ public class TranscriptService {
     private final WebClient webClient;
     private final YoutubeRepository youtubeRepository;
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     ExchangeStrategies strategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
             .build();
-    public TranscriptService(WebClient.Builder webClientBuilder, YoutubeRepository youtubeRepository, UsersRepository usersRepository) {
+    public TranscriptService(WebClient.Builder webClientBuilder, YoutubeRepository youtubeRepository, UserRepository userRepository) {
         this.webClient = WebClient.builder()
                 .exchangeStrategies(strategies)
                 .baseUrl("http://localhost:5000")  // Set your base URL accordingly
                 .build();
         this.youtubeRepository = youtubeRepository;
-        this.usersRepository = usersRepository;
+        this.userRepository = userRepository;
     }
 
-    public Mono<Youtube> fetchTranscripts(String videoId, String username) {
-        Optional<Users> userOptional = usersRepository.findById(username);
+    public Mono<Video> fetchTranscripts(String videoId, String username) {
+        Optional<User> userOptional = userRepository.findById(username);
         if (userOptional.isEmpty()) {
             return Mono.error(new RuntimeException("User not found"));
         }
-        Users users = userOptional.get();
+        User user = userOptional.get();
         return webClient.get()
                 .uri("/transcripts/" + videoId)
                 .retrieve()
                 .bodyToFlux(Map.class)
                 .collectList()
                 .map(transcriptDataList -> {
-                    Youtube youtube = new Youtube();
-                    youtube.setLink("https://www.youtube.com/watch?v=" + videoId);
+                    Video video = new Video();
+                    video.setLink("https://www.youtube.com/watch?v=" + videoId);
                     List<Transcript> transcriptList = new ArrayList<>();
                     for (Map<String, Object> transcriptData : transcriptDataList) {
                         List<Map<String, Object>> transcripts = (List<Map<String, Object>>) transcriptData.get("transcripts");
                         if (transcripts != null) {
                             for (Map<String, Object> transcriptMap : transcripts) {
                                 Transcript transcript = new Transcript();
-                                transcript.setText((String) transcriptMap.get("text"));
+                                transcript.setSentence((String) transcriptMap.get("text"));
                                 transcript.setStart(((Number) transcriptMap.get("start")).doubleValue());
                                 transcript.setDuration(((Number) transcriptMap.get("duration")).doubleValue());
                                 String base64Audio = (String) transcriptMap.get("audio");
@@ -59,14 +59,14 @@ public class TranscriptService {
                                     audioBytes = Base64.getDecoder().decode(base64Audio);
                                 }
                                 transcript.setAudio(audioBytes);
-                                transcript.setYoutube(youtube);  // Setting the reference to the Youtube object
+                                transcript.setVideo(video);  // Setting the reference to the Youtube object
                                 transcriptList.add(transcript);
                             }
                         }
                     }
-                    youtube.setTranscriptList(transcriptList);
-                    youtube.setUsers(users);
-                    return youtube;
+                    video.setTranscriptList(transcriptList);
+                    video.setUser(user);
+                    return video;
                 })
                 .flatMap(youtube -> Mono.fromCallable(() -> youtubeRepository.save(youtube)));
 

@@ -1,6 +1,5 @@
 package com.swm.mvp.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swm.mvp.entity.converter.RoleTypesConverter;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,13 +12,13 @@ import java.util.*;
 @ToString(callSuper = true)
 @Table
 @Entity
-public class Users extends AuditingFields {
+public class User extends AuditingFields {
     @Id
     @Setter
     @Column(length = 50)
     private String userId;
 
-    @Setter @Column(nullable = false) private String userPassword;
+    @Setter @Column(nullable = false) private String password;
 
     @Convert(converter = RoleTypesConverter.class)
     @Column(nullable = false)
@@ -29,29 +28,30 @@ public class Users extends AuditingFields {
     @Setter @Column(length = 100) private String email;
     @Setter @Column(length = 100) private String nickname;
     @Setter private String memo;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
-    @JsonManagedReference
-    private List<Youtube> youtubeList;
-    public Users() {}
 
-    private Users(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Youtube> youtubeList, String createdBy) {
+    @OneToMany(mappedBy = "user")
+    private List<UserVideo> userVideos;
+
+    public User() {}
+
+    private User(String userId, String password, Set<RoleType> roleTypes, String email, String nickname, String memo, List<UserVideo> userVideos, String createdBy) {
         this.userId = userId;
-        this.userPassword = userPassword;
+        this.password = password;
         this.roleTypes = roleTypes;
         this.email = email;
         this.nickname = nickname;
         this.memo = memo;
-        this.youtubeList = youtubeList;
+        this.userVideos = userVideos;
         this.createdBy = createdBy;
         this.modifiedBy = createdBy;
     }
 
-    public static Users of(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Youtube> youtubeList) {
-        return Users.of(userId, userPassword, roleTypes, email, nickname, memo, youtubeList, null);
+    public static User of(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, List<UserVideo> userVideos) {
+        return User.of(userId, userPassword, roleTypes, email, nickname, memo, userVideos, null);
     }
 
-    public static Users of(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Youtube>youtubeList,String createdBy) {
-        return new Users(userId, userPassword, roleTypes, email, nickname, memo, youtubeList, createdBy);
+    public static User of(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, List<UserVideo> userVideos, String createdBy) {
+        return new User(userId, userPassword, roleTypes, email, nickname, memo, userVideos, createdBy);
     }
 
     public void addRoleType(RoleType roleType) {
@@ -69,7 +69,7 @@ public class Users extends AuditingFields {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Users that)) return false;
+        if (!(o instanceof User that)) return false;
         return this.getUserId() != null && this.getUserId().equals(that.getUserId());
     }
 

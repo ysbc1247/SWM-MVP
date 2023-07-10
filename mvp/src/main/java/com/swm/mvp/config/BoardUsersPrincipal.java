@@ -2,7 +2,7 @@ package com.swm.mvp.config;
 
 import com.swm.mvp.dto.UsersDTO;
 import com.swm.mvp.entity.RoleType;
-import com.swm.mvp.entity.Youtube;
+import com.swm.mvp.entity.Video;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,15 +21,15 @@ public record BoardUsersPrincipal(
         String email,
         String nickname,
         String memo,
-        List<Youtube> youtubeList,
+        List<Video> videoList,
         Map<String, Object> oAuth2Attributes
 ) implements UserDetails, OAuth2User {
 
-    public static BoardUsersPrincipal of(String username, String password, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Youtube>youtubeList) {
-        return BoardUsersPrincipal.of(username, password, roleTypes, email, nickname, memo, youtubeList, Map.of());
+    public static BoardUsersPrincipal of(String username, String password, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Video> videoList) {
+        return BoardUsersPrincipal.of(username, password, roleTypes, email, nickname, memo, videoList, Map.of());
     }
 
-    public static BoardUsersPrincipal of(String username, String password, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Youtube>youtubeList, Map<String, Object> oAuth2Attributes) {
+    public static BoardUsersPrincipal of(String username, String password, Set<RoleType> roleTypes, String email, String nickname, String memo, List<Video> videoList, Map<String, Object> oAuth2Attributes) {
         return new BoardUsersPrincipal(
                 username,
                 password,
@@ -41,7 +41,7 @@ public record BoardUsersPrincipal(
                 email,
                 nickname,
                 memo,
-                youtubeList,
+                videoList,
                 oAuth2Attributes
         );
     }
@@ -54,7 +54,7 @@ public record BoardUsersPrincipal(
                 dto.email(),
                 dto.nickname(),
                 dto.memo(),
-                dto.youtubeList()
+                dto.videoList()
         );
     }
 
@@ -70,7 +70,7 @@ public record BoardUsersPrincipal(
                 email,
                 nickname,
                 memo,
-                youtubeList
+                videoList
         );
     }
 

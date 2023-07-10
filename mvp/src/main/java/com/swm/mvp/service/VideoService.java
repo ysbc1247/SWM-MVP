@@ -1,8 +1,8 @@
 package com.swm.mvp.service;
 
 import com.swm.mvp.dto.UsersDTO;
-import com.swm.mvp.entity.Youtube;
-import com.swm.mvp.repository.UsersRepository;
+import com.swm.mvp.entity.Video;
+import com.swm.mvp.repository.UserRepository;
 import com.swm.mvp.repository.YoutubeRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +15,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class YoutubeService {
+public class VideoService {
     @Autowired
     private YoutubeRepository youtubeRepository;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UsersService userService;
+    private UserService userService;
 
-    public ResponseEntity<Youtube> saveYoutube(String username, Youtube newYoutube) {
+    public ResponseEntity<Video> saveYoutube(String username, Video newVideo) {
         Optional<UsersDTO> userOptional = userService.searchUser(username);
         if (userOptional.isPresent()) {
             UsersDTO users = userOptional.get();
-            Youtube youtube = new Youtube();
-            youtube.setLink(newYoutube.getLink());
-            youtube.setTranscriptList(newYoutube.getTranscriptList());
-            users.getYoutubeList().add(youtube);
+            Video video = new Video();
+            video.setLink(newVideo.getLink());
+            video.setTranscriptList(newVideo.getTranscriptList());
+            users.getYoutubeList().add(video);
             userService.saveUser(
                     users.userId(),
                     users.userPassword(),
@@ -40,24 +40,24 @@ public class YoutubeService {
                     users.email(),
                     users.nickname(),
                     users.memo(),
-                    users.youtubeList()
+                    users.videoList()
             );
-            youtubeRepository.save(youtube);
-            return new ResponseEntity<>(youtube, HttpStatus.CREATED);
+            youtubeRepository.save(video);
+            return new ResponseEntity<>(video, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Transactional
-    public Optional<Youtube> findYoutubeById(Long id) {
-        Optional<Youtube> youtube = youtubeRepository.findById(id);
+    public Optional<Video> findYoutubeById(Long id) {
+        Optional<Video> youtube = youtubeRepository.findById(id);
         Hibernate.initialize(youtube.get().getTranscriptList());
         return youtube;
     }
 
     @Transactional
-    public List<Youtube> getAllYoutubes(String userId) {
+    public List<Video> getAllYoutubes(String userId) {
         return youtubeRepository.findAllByUsers_UserId(userId);
     }
 
@@ -65,7 +65,7 @@ public class YoutubeService {
         youtubeRepository.deleteById(id);
     }
 
-    public List<Youtube> findAllYoutubes() {
+    public List<Video> findAllYoutubes() {
         return youtubeRepository.findAll();
     }
 }

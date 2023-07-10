@@ -14,7 +14,7 @@ public class Transcript {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String text;
+    private String sentence;
     private Double start;
     private Double duration;
     @Lob
@@ -22,7 +22,7 @@ public class Transcript {
     private byte[] audio;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "youtube_id", nullable = false)
+    @JoinColumn(name = "video_id", nullable = false)
     @JsonBackReference
-    private Youtube youtube;
+    private Video video;
 }
